@@ -26,23 +26,39 @@ func commandExit() {
 	os.Exit(0)
 }
 
-func commandMap(locationAreaEndpoint string, location *internal.LocationArea) {
-	internal.GetAPI(locationAreaEndpoint, &location)
-	for _, location := range location.Results {
-		fmt.Println(location.Name)
-	}
+type config struct {
+	currentEndPoint string
+	locationArea    *internal.LocationArea
 }
 
-func commandMapb(locationAreaEndpoint string, location *internal.LocationArea) error {
-	internal.GetAPI(locationAreaEndpoint, &location)
-	if location.Previous == nil {
+func commandMap(c *config) {
+	internal.GetAPI(c.currentEndPoint, &c.locationArea)
+
+	for _, location := range c.locationArea.Results {
+		fmt.Println(location.Name)
+	}
+
+	c.currentEndPoint = c.locationArea.Next
+}
+
+func commandMapb(c *config) error {
+
+	if c.locationArea.Previous == nil {
 		fmt.Println("first page")
 		return errors.New("you are on the first page")
 	}
+
+	c.currentEndPoint = *c.locationArea.Previous
+	internal.GetAPI(c.currentEndPoint, &c.locationArea)
+
+	for _, location := range c.locationArea.Results {
+		fmt.Println(location.Name)
+	}
+
 	return nil
 }
 
-func (c CliCommands) GetCommands() CliCommands {
+func (cc CliCommands) GetCommands(c *config) CliCommands {
 	return CliCommands{
 		"help": {
 			name:        "help",
@@ -57,24 +73,31 @@ func (c CliCommands) GetCommands() CliCommands {
 		"map": {
 			name:        "map",
 			description: "displays the next 20 location areas in Pokemon world",
-			callback:    func() { commandMap(locationAreaEndpoint, &internal.LocationArea{}) },
+			callback:    func() { commandMap(c) },
 		},
 		"mapb": {
 			name:        "mapb",
 			description: "displays the previous 20 location areas in Pokemon world",
-			callback:    func() { commandMapb(locationAreaEndpoint, &internal.LocationArea{}) },
+			callback:    func() { commandMapb(c) },
 		},
 	}
 }
 
 func CLI() {
 	scanner := bufio.NewScanner(os.Stdin)
+
+	var initialLocationAreaEndpoint string = "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20"
+	config := &config{
+		currentEndPoint: initialLocationAreaEndpoint,
+		locationArea:    &internal.LocationArea{},
+	}
+
 	for {
 		fmt.Printf("pokedex >")
 		scanner.Scan()
 		text := scanner.Text()
 		c := CliCommands{}
-		command, ok := c.GetCommands()[text]
+		command, ok := c.GetCommands(config)[text]
 		if !ok {
 			fmt.Printf("Command not available, see 'help'\n")
 			continue
