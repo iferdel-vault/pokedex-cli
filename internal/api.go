@@ -18,6 +18,20 @@ type LocationArea struct {
 	} `json:"results"`
 }
 
+/*
+func (l LocationArea) getName() {
+    for _, location := range &LocationArea.Results {
+        
+    }
+}
+
+type GetData interface {
+    GetName()
+}
+
+*/
+
+
 func GetAPI(endpoint string, jsonStructure interface{}) {
 	res, err := http.Get(endpoint)
 	if err != nil {

@@ -2,8 +2,11 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
+
+	"github.com/iferdel/pokedexcli/internal"
 )
 
 type CliCommands map[string]CliCommand
@@ -23,19 +26,20 @@ func commandExit() {
 	os.Exit(0)
 }
 
-/*
-func mapCommand(p *Pagination) {
-
+func commandMap(locationAreaEndpoint string, location *internal.LocationArea) {
+	internal.GetAPI(locationAreaEndpoint, &location)
+	for _, location := range location.Results {
+		fmt.Println(location.Name)
+	}
 }
 
-func mapbCommand(p *Pagination) {
-
-}
-*/
-type Pagination struct {
-	page        int
-	nextUrl     string
-	previousUrl string
+func commandMapb(locationAreaEndpoint string, location *internal.LocationArea) error {
+	internal.GetAPI(locationAreaEndpoint, &location)
+	if location.Previous == nil {
+		fmt.Println("first page")
+		return errors.New("you are on the first page")
+	}
+	return nil
 }
 
 func (c CliCommands) GetCommands() CliCommands {
@@ -53,12 +57,12 @@ func (c CliCommands) GetCommands() CliCommands {
 		"map": {
 			name:        "map",
 			description: "displays the next 20 location areas in Pokemon world",
-			//callback:    mapCommand,
+			callback:    func() { commandMap(locationAreaEndpoint, &internal.LocationArea{}) },
 		},
 		"mapb": {
 			name:        "mapb",
 			description: "displays the previous 20 location areas in Pokemon world",
-			//callback:    mapbCommand,
+			callback:    func() { commandMapb(locationAreaEndpoint, &internal.LocationArea{}) },
 		},
 	}
 }
