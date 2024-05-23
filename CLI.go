@@ -23,6 +23,7 @@ func commandExit() {
 	os.Exit(0)
 }
 
+/*
 func mapCommand(p *Pagination) {
 
 }
@@ -30,7 +31,7 @@ func mapCommand(p *Pagination) {
 func mapbCommand(p *Pagination) {
 
 }
-
+*/
 type Pagination struct {
 	page        int
 	nextUrl     string
@@ -52,12 +53,12 @@ func (c CliCommands) GetCommands() CliCommands {
 		"map": {
 			name:        "map",
 			description: "displays the next 20 location areas in Pokemon world",
-			callback:    mapCommand,
+			//callback:    mapCommand,
 		},
 		"mapb": {
 			name:        "mapb",
 			description: "displays the previous 20 location areas in Pokemon world",
-			callback:    mapbCommand,
+			//callback:    mapbCommand,
 		},
 	}
 }
