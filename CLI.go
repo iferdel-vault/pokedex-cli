@@ -33,27 +33,20 @@ type config struct {
 
 func commandMap(c *config) {
 	internal.GetAPI(c.currentEndPoint, &c.locationArea)
-
-	for _, location := range c.locationArea.Results {
-		fmt.Println(location.Name)
-	}
-
+	c.locationArea.GetLocationNames()
 	c.currentEndPoint = c.locationArea.Next
 }
 
 func commandMapb(c *config) error {
 
 	if c.locationArea.Previous == nil {
-		fmt.Println("first page")
-		return errors.New("you are on the first page")
+		fmt.Println("you are in the first page")
+		return errors.New("currently on first page")
 	}
 
 	c.currentEndPoint = *c.locationArea.Previous
 	internal.GetAPI(c.currentEndPoint, &c.locationArea)
-
-	for _, location := range c.locationArea.Results {
-		fmt.Println(location.Name)
-	}
+	c.locationArea.GetLocationNames()
 
 	return nil
 }

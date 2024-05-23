@@ -18,13 +18,13 @@ type LocationArea struct {
 	} `json:"results"`
 }
 
-/*
-func (l LocationArea) getName() {
-    for _, location := range &LocationArea.Results {
-        
-    }
-}
 
+func (l LocationArea) GetLocationNames() {
+	for _, location := range l.Results {
+		fmt.Println(location.Name)
+	}
+}
+/*
 type GetData interface {
     GetName()
 }
