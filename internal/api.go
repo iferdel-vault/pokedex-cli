@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"encoding/json"
@@ -7,9 +7,6 @@ import (
 	"log"
 	"net/http"
 )
-
-// dejará de ser constante supongo, ya que offset nos permitirá cambiar de página
-const locationAreaEndpoint = "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20"
 
 type LocationArea struct {
 	Count    int     `json:"count"`
@@ -21,8 +18,8 @@ type LocationArea struct {
 	} `json:"results"`
 }
 
-func main() {
-	res, err := http.Get(locationAreaEndpoint)
+func GetAPI(endpoint string, jsonStructure interface{}) {
+	res, err := http.Get(endpoint)
 	if err != nil {
 		fmt.Println("Error encountered during the http.Get method")
 		log.Fatal(err)
@@ -35,8 +32,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	pagedLocationArea := LocationArea{}
-	err = json.Unmarshal(body, &pagedLocationArea)
+	err = json.Unmarshal(body, jsonStructure)
 	if err != nil {
 		fmt.Println(err)
 	}
