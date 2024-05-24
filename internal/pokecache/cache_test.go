@@ -27,7 +27,7 @@ func TestAddGet(t *testing.T) {
 				return
 			}
 
-			if got != c.val {
+			if string(got) != string(c.val) {
 				t.Errorf("expected value %v, but got %v in test %v", c.val, got, i)
 			}
 		})
