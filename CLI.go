@@ -6,17 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/iferdel/pokedexcli/internal"
+	"github.com/iferdel/pokedexcli/internal/api"
 )
-
-type CliCommands map[string]CliCommand
-
-// CliCommand is used to construct the CliCommands
-type CliCommand struct {
-	name        string
-	description string
-	callback    func()
-}
 
 func commandHelp() {
 	fmt.Println("This is the help of the pokedex")
@@ -32,7 +23,7 @@ type config struct {
 }
 
 func commandMap(c *config) {
-	internal.GetAPI(c.currentEndPoint, &c.locationArea)
+	internal.GetAPI(c.currentEndPoint, c.locationArea)
 	c.locationArea.GetLocationNames()
 	c.currentEndPoint = c.locationArea.Next
 }
@@ -45,10 +36,19 @@ func commandMapb(c *config) error {
 	}
 
 	c.currentEndPoint = *c.locationArea.Previous
-	internal.GetAPI(c.currentEndPoint, &c.locationArea)
+	internal.GetAPI(c.currentEndPoint, c.locationArea)
 	c.locationArea.GetLocationNames()
 
 	return nil
+}
+
+type CliCommands map[string]CliCommand
+
+// CliCommand is used to construct the CliCommands
+type CliCommand struct {
+	name        string
+	description string
+	callback    func()
 }
 
 func (cc CliCommands) GetCommands(c *config) CliCommands {
