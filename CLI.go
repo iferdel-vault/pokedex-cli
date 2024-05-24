@@ -9,14 +9,6 @@ import (
 	"github.com/iferdel/pokedexcli/internal/api"
 )
 
-func commandHelp() {
-	fmt.Println("This is the help of the pokedex")
-}
-
-func commandExit() {
-	os.Exit(0)
-}
-
 type config struct {
 	currentEndPoint string
 	locationArea    *internal.LocationArea
@@ -48,7 +40,7 @@ type CliCommands map[string]CliCommand
 type CliCommand struct {
 	name        string
 	description string
-	callback    func()
+	callback    func() error
 }
 
 func (cc CliCommands) GetCommands(c *config) CliCommands {
@@ -66,12 +58,12 @@ func (cc CliCommands) GetCommands(c *config) CliCommands {
 		"map": {
 			name:        "map",
 			description: "displays the next 20 location areas in Pokemon world",
-			callback:    func() { commandMap(c) },
+			callback:    func() error { commandMap(c); return nil },
 		},
 		"mapb": {
 			name:        "mapb",
 			description: "displays the previous 20 location areas in Pokemon world",
-			callback:    func() { commandMapb(c) },
+			callback:    func() error { commandMapb(c); return nil },
 		},
 	}
 }
