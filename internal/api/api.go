@@ -18,7 +18,6 @@ type LocationArea struct {
 	} `json:"results"`
 }
 
-
 func (l LocationArea) GetLocationNames() {
 	for _, location := range l.Results {
 		fmt.Println(location.Name)
@@ -33,9 +32,9 @@ func GetAPI(endpoint string, jsonStructure interface{}) {
 	}
 	body, err := io.ReadAll(res.Body)
 	res.Body.Close()
-    if res.StatusCode != 200 {
-        fmt.Errorf("response comes with status code %q, expected 200", res.StatusCode)
-    }
+	if res.StatusCode != 200 {
+		fmt.Errorf("response comes with status code %q, expected 200", res.StatusCode)
+	}
 	if err != nil {
 		fmt.Println("Error encountered during the read of the body from the response")
 		log.Fatal(err)
