@@ -95,7 +95,7 @@ func CLI() {
 		}
 
 		c := CliCommands{}
-		command, ok := c.getCommands(config)[text]
+		command, ok := c.getCommands(config)[cleanedInput[0]]
 		if !ok {
 			fmt.Printf("Command not available, see 'help'\n")
 			continue
