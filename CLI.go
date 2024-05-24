@@ -43,7 +43,7 @@ type CliCommand struct {
 	callback    func() error
 }
 
-func (cc CliCommands) GetCommands(c *config) CliCommands {
+func (cc CliCommands) getCommands(c *config) CliCommands {
 	return CliCommands{
 		"help": {
 			name:        "help",
@@ -82,7 +82,7 @@ func CLI() {
 		scanner.Scan()
 		text := scanner.Text()
 		c := CliCommands{}
-		command, ok := c.GetCommands(config)[text]
+		command, ok := c.getCommands(config)[text]
 		if !ok {
 			fmt.Printf("Command not available, see 'help'\n")
 			continue
