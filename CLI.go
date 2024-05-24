@@ -44,7 +44,7 @@ type CliCommand struct {
 	callback    func() error
 }
 
-func (cc CliCommands) getCommands(c *config) CliCommands {
+func getCommands(c *config) CliCommands {
 	return CliCommands{
 		"help": {
 			name:        "help",
@@ -94,8 +94,7 @@ func CLI() {
 			continue
 		}
 
-		c := CliCommands{}
-		command, ok := c.getCommands(config)[cleanedInput[0]]
+		command, ok := getCommands(config)[cleanedInput[0]]
 		if !ok {
 			fmt.Printf("Command not available, see 'help'\n")
 			continue
