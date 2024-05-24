@@ -24,14 +24,21 @@ func TestAddGet(t *testing.T) {
 		t.Run(fmt.Sprintf("test case %v", i), func(t *testing.T) {
 			cache := NewCache()
 
-			cache.Add(c.key, c.val)
+			err := cache.Add(c.key, c.val)
 			if c.key == "" {
-				t.Errorf("cannot add an empty key value")
+				if err == nil {
+					t.Errorf("expected error caused by empty key added")
+				}
+				return
+			}
+			if err != nil {
+				t.Errorf("unexpected error adding key %v in test case %v: %v", c.key, i, err)
+				return
 			}
 
 			got, ok := cache.Get(c.key)
 			if !ok {
-				t.Errorf("expected a key to be found in test case %v", i)
+				t.Errorf("expected key %v to be found in test case %v", c.key, i)
 				return
 			}
 
