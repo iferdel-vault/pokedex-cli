@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/iferdel/pokedexcli/internal/api"
 )
@@ -66,6 +67,11 @@ func (cc CliCommands) getCommands(c *config) CliCommands {
 			callback:    func() error { commandMapb(c); return nil },
 		},
 	}
+}
+
+func cleanInput(input string) []string {
+	words := strings.Fields(input)
+	return words
 }
 
 func CLI() {
