@@ -20,12 +20,11 @@ func TestCleanInput(t *testing.T) {
 		if len(got) != len(want) {
 			t.Errorf("got %q, want %v", got, want)
 		}
-        for i := 0; i < len(got); i++ {
-            if got[i] != want[i] {
-                t.Errorf("got word %q, but expected %q", got[i], want[i])    
-            }
-        }
+		for i := 0; i < len(got); i++ {
+			if got[i] != want[i] {
+				t.Errorf("got word %q, but expected %q", got[i], want[i])
+			}
+		}
 	}
-
 
 }
