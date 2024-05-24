@@ -87,6 +87,13 @@ func CLI() {
 		fmt.Printf("pokedex >")
 		scanner.Scan()
 		text := scanner.Text()
+
+		cleanedInput := cleanInput(text)
+		if len(cleanedInput) == 0 {
+			fmt.Printf("")
+			continue
+		}
+
 		c := CliCommands{}
 		command, ok := c.getCommands(config)[text]
 		if !ok {
