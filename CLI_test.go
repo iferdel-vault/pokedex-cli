@@ -9,7 +9,9 @@ func TestCleanInput(t *testing.T) {
 		input string
 		want  []string
 	}{
-		{input: "hello help", want: []string{"hello", "help"}},
+		{input: "hello test", want: []string{"hello", "test"}},
+		{input: "test ", want: []string{"test"}},
+		{input: " test", want: []string{"test"}},
 	}
 
 	for _, tc := range cases {
@@ -18,5 +20,12 @@ func TestCleanInput(t *testing.T) {
 		if len(got) != len(want) {
 			t.Errorf("got %q, want %v", got, want)
 		}
+        for i := 0; i < len(got); i++ {
+            if got[i] != want[i] {
+                t.Errorf("got word %q, but expected %q", got[i], want[i])    
+            }
+        }
 	}
+
+
 }
