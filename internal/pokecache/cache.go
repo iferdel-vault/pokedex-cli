@@ -7,6 +7,7 @@ func NewCache() Cache {
 }
 
 func (c Cache) Add(key string, value []byte) {
+	c[key] = value
 }
 
 func (c Cache) Get(key string) ([]byte, bool) {
