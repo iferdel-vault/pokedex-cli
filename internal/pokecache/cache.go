@@ -2,23 +2,44 @@ package pokecache
 
 import (
 	"fmt"
+	"sync"
+	"time"
 )
 
-type Cache map[string][]byte
-
-func NewCache() Cache {
-	return Cache{}
+type Cache struct {
+	cache map[string]cacheEntry
+	mutex sync.Mutex
 }
 
-func (c Cache) Add(key string, value []byte) error {
+type cacheEntry struct {
+	createdAt time.Time
+	val       []byte
+}
+
+func NewCache() Cache {
+	return Cache{
+		cache: make(map[string]cacheEntry),
+	}
+}
+
+func (c *Cache) Add(key string, value []byte) error {
 	if key == "" {
 		return fmt.Errorf("cannot add an empty key")
 	}
-	c[key] = value
+	cacheEntry := cacheEntry{
+		createdAt: time.Now(),
+		val:       value,
+	}
+	c.cache[key] = cacheEntry
 	return nil
 }
 
-func (c Cache) Get(key string) ([]byte, bool) {
-	val, ok := c[key]
-	return val, ok
+func (c *Cache) Get(key string) ([]byte, bool) {
+
+	entry, ok := c.cache[key]
+	return entry.val, ok
+}
+
+func (c *Cache) reapLoop() {
+
 }
