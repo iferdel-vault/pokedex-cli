@@ -3,9 +3,11 @@ package pokecache
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestAddGet(t *testing.T) {
+	const interval = 5 * time.Second
 	cases := []struct {
 		key string // endpoint
 		val []byte // content
@@ -22,7 +24,7 @@ func TestAddGet(t *testing.T) {
 
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("test case %v", i), func(t *testing.T) {
-			cache := NewCache()
+			cache := NewCache(interval)
 
 			err := cache.Add(c.key, c.val)
 			if c.key == "" {
