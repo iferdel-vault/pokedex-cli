@@ -16,6 +16,8 @@ type cacheEntry struct {
 	val       []byte
 }
 
+// el pointer está de más parece
+// /////////////
 func NewCache(interval time.Duration) *Cache {
 	c := &Cache{
 		cache: make(map[string]cacheEntry),
@@ -52,18 +54,19 @@ func (c *Cache) Get(key string) ([]byte, bool) {
 func (c *Cache) reapLoop(interval time.Duration) {
 	ticker := time.NewTicker(time.Second)
 	defer ticker.Stop()
-	for range ticker.C {
-		currentTime := time.Now()
-
+	for range ticker.C { // runs every interval (i.e. interval = 5 min, runs every 5 min)
 		c.mutex.Lock()
-
-		for key, entry := range c.cache {
-			if currentTime.Sub(entry.createdAt) > interval { // Sub method returns diff
-				delete(c.cache, key)
-			}
-		}
-
-		// dejar un defer aquí produce un deadlock
+		c.reap(interval)
 		c.mutex.Unlock()
 	}
+}
+
+func (c *Cache) reap(interval time.Duration) {
+	currentTime := time.Now().UTC()
+	for key, entry := range c.cache {
+		if currentTime.Sub(entry.createdAt) > interval { // Sub method returns diff
+			delete(c.cache, key)
+		}
+	}
+
 }
