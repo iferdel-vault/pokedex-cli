@@ -53,12 +53,13 @@ func TestAddGet(t *testing.T) {
 }
 
 func TestReapLoop(t *testing.T) {
-	const interval = 5 * time.Second
-	c := NewCache(interval)
+	const baseTime = 1 * time.Second
+	const waitTime = baseTime + 2*time.Second
+	c := NewCache(baseTime)
 	key := "https://example.com"
 	value := []byte("test")
 	c.Add(key, value)
-	time.Sleep(2 * interval)
+	time.Sleep(waitTime)
 
 	retrievedData, ok := c.Get(key)
 	if ok {
