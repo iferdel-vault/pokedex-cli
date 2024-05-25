@@ -8,13 +8,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/iferdel/pokedexcli/internal/api"
+	"github.com/iferdel/pokedexcli/internal/pokeapi"
 	"github.com/iferdel/pokedexcli/internal/pokecache"
 )
 
 type config struct {
 	currentEndPoint string
-	locationArea    *internal.LocationArea
+	locationAreas    *internal.LocationAreasResp
 }
 
 func commandMap(c *config, cache *pokecache.Cache) {
@@ -24,23 +24,31 @@ func commandMap(c *config, cache *pokecache.Cache) {
 		fmt.Println(string(cachedData))
 		return
 	}
-	internal.GetAPI(c.currentEndPoint, c.locationArea)
-	locationValues := c.locationArea.GetLocationNames()
+	internal.GetAPI(c.currentEndPoint, &c.locationAreas)
+	locationValues := c.locationAreas.GetLocationNames()
 	cache.Add(c.currentEndPoint, []byte(locationValues))
 
-	c.currentEndPoint = c.locationArea.Next
+	c.currentEndPoint = *c.locationAreas.Next
 }
 
-func commandMapb(c *config) error {
+func commandMapb(c *config, cache *pokecache.Cache) error {
 
-	if c.locationArea.Previous == nil {
+	if c.locationAreas.Previous == nil {
 		fmt.Println("you are in the first page")
 		return errors.New("currently on first page")
 	}
 
-	c.currentEndPoint = *c.locationArea.Previous
-	internal.GetAPI(c.currentEndPoint, c.locationArea)
-	c.locationArea.GetLocationNames()
+	c.currentEndPoint = *c.locationAreas.Previous
+
+	if cachedData, ok := cache.Get(c.currentEndPoint); ok {
+		cache.Get(c.currentEndPoint)
+		fmt.Println(string(cachedData))
+		return nil
+	}
+
+	internal.GetAPI(c.currentEndPoint, &c.locationAreas)
+	locationValues := c.locationAreas.GetLocationNames()
+	cache.Add(c.currentEndPoint, []byte(locationValues))
 
 	return nil
 }
@@ -74,7 +82,7 @@ func getCommands(c *config, cache *pokecache.Cache) CliCommands {
 		"mapb": {
 			name:        "mapb",
 			description: "displays the previous 20 location areas in Pokemon world",
-			callback:    func() error { commandMapb(c); return nil },
+			callback:    func() error { commandMapb(c, cache); return nil },
 		},
 	}
 }
@@ -90,7 +98,7 @@ func CLI() {
 	var initialLocationAreaEndpoint string = "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20"
 	config := &config{
 		currentEndPoint: initialLocationAreaEndpoint,
-		locationArea:    &internal.LocationArea{},
+		locationAreas:    &internal.LocationAreasResp{},
 	}
 
 	// cache initialization

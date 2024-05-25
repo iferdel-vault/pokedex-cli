@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-type LocationArea struct {
+type LocationAreasResp struct {
 	Count    int     `json:"count"`
 	Next     *string  `json:"next"` // Next is nil in last page
 	Previous *string `json:"previous"` // Previous is nil in first page
@@ -18,7 +18,7 @@ type LocationArea struct {
 	} `json:"results"`
 }
 
-func (l LocationArea) GetLocationNames() []byte {
+func (l LocationAreasResp) GetLocationNames() []byte {
 	locationNames := ""
 	for _, location := range l.Results {
 		fmt.Println(location.Name)
