@@ -34,8 +34,10 @@ func GetAPI(endpoint string, jsonStructure interface{}) {
 		fmt.Println("Error encountered during the http.Get method")
 		log.Fatal(err)
 	}
-	body, err := io.ReadAll(res.Body)
+
 	defer res.Body.Close()
+	body, err := io.ReadAll(res.Body)
+
 	if res.StatusCode != 200 {
 		fmt.Errorf("response comes with status code %q, expected 200", res.StatusCode)
 	}

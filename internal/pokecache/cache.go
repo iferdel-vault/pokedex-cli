@@ -63,7 +63,7 @@ func (c *Cache) reapLoop(interval time.Duration) {
 			}
 		}
 
-		// más eff que usar defer al estár dentro de un loop y solicitarse mucho  el lock/unlock
+		// dejar un defer aquí produce un deadlock
 		c.mutex.Unlock()
 	}
 }
