@@ -64,6 +64,6 @@ func TestReapLoop(t *testing.T) {
 	retrievedData, ok := c.Get(key)
 	if ok {
 		t.Errorf("not expected to find %v: %v", key, retrievedData)
-        return
+		return
 	}
 }
