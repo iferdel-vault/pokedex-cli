@@ -61,17 +61,16 @@ func TestAddGet(t *testing.T) {
 }
 
 func TestReapLoop(t *testing.T) {
-	const baseTime = 1 * time.Second
-	const waitTime = baseTime + 2*time.Second
-	c := NewCache(baseTime)
-	key := "https://example.com"
-	value := []byte("test")
+	interval := 1 * time.Second
+	c := NewCache(interval)
+
+	key, value := "https://example.com", []byte("test")
 	c.Add(key, value)
-	time.Sleep(waitTime)
+
+	time.Sleep(interval + time.Millisecond)
 
 	retrievedData, ok := c.Get(key)
 	if ok {
 		t.Errorf("not expected to find %v: %v", key, retrievedData)
-		return
 	}
 }
