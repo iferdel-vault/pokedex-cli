@@ -60,7 +60,7 @@ func TestAddGet(t *testing.T) {
 	}
 }
 
-func TestReapLoop(t *testing.T) {
+func TestReapPass(t *testing.T) {
 	interval := 1 * time.Second
 	c := NewCache(interval)
 
@@ -72,5 +72,20 @@ func TestReapLoop(t *testing.T) {
 	retrievedData, ok := c.Get(key)
 	if ok {
 		t.Errorf("not expected to find %v: %v", key, retrievedData)
+	}
+}
+
+func TestReapFail(t *testing.T) {
+	interval := 1 * time.Second
+	c := NewCache(interval)
+
+	key, value := "https://example.com", []byte("test")
+	c.Add(key, value)
+
+	time.Sleep(interval / 2)
+
+	retrievedData, ok := c.Get(key)
+	if !ok {
+		t.Errorf("expected to find %v: %v", key, retrievedData)
 	}
 }
