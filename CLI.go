@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/iferdel/pokedexcli/internal/api"
+	"github.com/iferdel/pokedexcli/internal/pokecache"
 )
 
 type config struct {
@@ -15,9 +17,17 @@ type config struct {
 	locationArea    *internal.LocationArea
 }
 
-func commandMap(c *config) {
+func commandMap(c *config, cache *pokecache.Cache) {
+	// check if data in cache already
+	if cachedData, ok := cache.Get(c.currentEndPoint); ok {
+		cache.Get(c.currentEndPoint)
+		fmt.Println(string(cachedData))
+		return
+	}
 	internal.GetAPI(c.currentEndPoint, c.locationArea)
-	c.locationArea.GetLocationNames()
+	locationValues := c.locationArea.GetLocationNames()
+	cache.Add(c.currentEndPoint, []byte(locationValues))
+
 	c.currentEndPoint = c.locationArea.Next
 }
 
@@ -44,7 +54,7 @@ type CliCommand struct {
 	callback    func() error
 }
 
-func getCommands(c *config) CliCommands {
+func getCommands(c *config, cache *pokecache.Cache) CliCommands {
 	return CliCommands{
 		"help": {
 			name:        "help",
@@ -59,7 +69,7 @@ func getCommands(c *config) CliCommands {
 		"map": {
 			name:        "map",
 			description: "displays the next 20 location areas in Pokemon world",
-			callback:    func() error { commandMap(c); return nil },
+			callback:    func() error { commandMap(c, cache); return nil },
 		},
 		"mapb": {
 			name:        "mapb",
@@ -83,6 +93,9 @@ func CLI() {
 		locationArea:    &internal.LocationArea{},
 	}
 
+	// cache initialization
+	cache := pokecache.NewCache(10 * time.Second)
+
 	for {
 		fmt.Printf("pokedex >")
 		scanner.Scan()
@@ -94,7 +107,7 @@ func CLI() {
 			continue
 		}
 
-		command, ok := getCommands(config)[cleanedInput[0]]
+		command, ok := getCommands(config, cache)[cleanedInput[0]]
 		if !ok {
 			fmt.Printf("Command not available, see 'help'\n")
 			continue

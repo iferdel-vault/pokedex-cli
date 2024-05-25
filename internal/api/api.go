@@ -18,10 +18,14 @@ type LocationArea struct {
 	} `json:"results"`
 }
 
-func (l LocationArea) GetLocationNames() {
+func (l LocationArea) GetLocationNames() []byte {
+	locationNames := ""
 	for _, location := range l.Results {
 		fmt.Println(location.Name)
+		locationNames += location.Name + "\n"
 	}
+	locationNames = locationNames[:len(locationNames)-1]
+	return []byte(locationNames)
 }
 
 func GetAPI(endpoint string, jsonStructure interface{}) {
