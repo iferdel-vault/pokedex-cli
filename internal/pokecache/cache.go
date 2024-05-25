@@ -23,7 +23,7 @@ func NewCache(interval time.Duration) *Cache {
 		cache: make(map[string]cacheEntry),
 		mutex: sync.RWMutex{},
 	}
-	go c.reapLoop(interval)
+	c.reapLoop(interval)
 	return c
 }
 
