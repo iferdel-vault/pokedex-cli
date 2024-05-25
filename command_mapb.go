@@ -1,13 +1,12 @@
 package main
 
 import (
-    "fmt"
-    "errors"
-    
+	"errors"
+	"fmt"
+
 	"github.com/iferdel/pokedexcli/internal/pokeapi"
 	"github.com/iferdel/pokedexcli/internal/pokecache"
 )
-
 
 func commandMapb(c *config, cache *pokecache.Cache) error {
 
@@ -16,18 +15,17 @@ func commandMapb(c *config, cache *pokecache.Cache) error {
 		return errors.New("currently on first page")
 	}
 
-	c.currentEndPoint = *c.locationAreas.Previous
+	c.currentEndPoint = c.locationAreas.Previous
 
-	if cachedData, ok := cache.Get(c.currentEndPoint); ok {
-		cache.Get(c.currentEndPoint)
+	if cachedData, ok := cache.Get(*c.currentEndPoint); ok {
+		cache.Get(*c.currentEndPoint)
 		fmt.Println(string(cachedData))
 		return nil
 	}
 
-	internal.GetAPI(c.currentEndPoint, &c.locationAreas)
+	internal.GetAPI(*c.currentEndPoint, &c.locationAreas)
 	locationValues := c.locationAreas.GetLocationNames()
-	cache.Add(c.currentEndPoint, []byte(locationValues))
+	cache.Add(*c.currentEndPoint, []byte(locationValues))
 
 	return nil
 }
-

@@ -1,7 +1,7 @@
 package internal
 
 import (
-    "fmt"
+	"fmt"
 )
 
 func (l LocationAreasResp) GetLocationNames() []byte {
@@ -13,4 +13,3 @@ func (l LocationAreasResp) GetLocationNames() []byte {
 	locationNames = locationNames[:len(locationNames)-1]
 	return []byte(locationNames)
 }
-

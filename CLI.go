@@ -12,8 +12,8 @@ import (
 )
 
 type config struct {
-	currentEndPoint string
-	locationAreas    *internal.LocationAreasResp
+	currentEndPoint *string
+	locationAreas   *internal.LocationAreasResp
 }
 
 type CliCommands map[string]CliCommand
@@ -58,10 +58,10 @@ func cleanInput(input string) []string {
 func CLI() {
 	scanner := bufio.NewScanner(os.Stdin)
 
-	var initialLocationAreaEndpoint string = "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20"
+	var initialLocationAreaEndpoint string = "https://pokeapi.co/api/v2/location-area/"
 	config := &config{
-		currentEndPoint: initialLocationAreaEndpoint,
-		locationAreas:    &internal.LocationAreasResp{},
+		currentEndPoint: &initialLocationAreaEndpoint,
+		locationAreas:   &internal.LocationAreasResp{},
 	}
 
 	// cache initialization
