@@ -23,7 +23,7 @@ func commandMapb(c *config, cache *pokecache.Cache) error {
 		return nil
 	}
 
-	internal.GetAPI(*c.currentEndPoint, &c.locationAreas)
+	pokeapi.GetAPI(*c.currentEndPoint, &c.locationAreas)
 	locationValues := c.locationAreas.GetLocationNames()
 	cache.Add(*c.currentEndPoint, []byte(locationValues))
 

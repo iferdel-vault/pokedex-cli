@@ -13,7 +13,7 @@ import (
 
 type config struct {
 	currentEndPoint *string
-	locationAreas   *internal.LocationAreasResp
+	locationAreas   *pokeapi.LocationAreasResp
 }
 
 type CliCommands map[string]CliCommand
@@ -61,7 +61,7 @@ func CLI() {
 	var initialLocationAreaEndpoint string = "https://pokeapi.co/api/v2/location-area/"
 	config := &config{
 		currentEndPoint: &initialLocationAreaEndpoint,
-		locationAreas:   &internal.LocationAreasResp{},
+		locationAreas:   &pokeapi.LocationAreasResp{},
 	}
 
 	// cache initialization

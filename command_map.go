@@ -14,7 +14,7 @@ func commandMap(c *config, cache *pokecache.Cache) {
 		fmt.Println(string(cachedData))
 		return
 	}
-	internal.GetAPI(*c.currentEndPoint, &c.locationAreas)
+	pokeapi.GetAPI(*c.currentEndPoint, &c.locationAreas)
 	locationValues := c.locationAreas.GetLocationNames()
 	cache.Add(*c.currentEndPoint, []byte(locationValues))
 
