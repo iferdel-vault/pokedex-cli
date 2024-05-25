@@ -33,11 +33,11 @@ func (c *Cache) Add(key string, value []byte) error {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
-	cacheEntry := cacheEntry{
-		createdAt: time.Now(),
+	c.cache[key] = cacheEntry{
+		createdAt: time.Now().UTC(),
 		val:       value,
 	}
-	c.cache[key] = cacheEntry
+
 	return nil
 }
 
