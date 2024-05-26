@@ -16,14 +16,14 @@ func (c *Client) GetLocationAreas(pageURL *string) (LocationAreasResp, error) {
 	}
 
 	// cache checking
-	dat, ok := c.cache.Get(fullURL)
+	cachedValues, ok := c.cache.Get(fullURL)
 	if ok {
 		// cache hit
 		fmt.Println("====cache hit=====")
 		LocationAreas := LocationAreasResp{}
-		err := json.Unmarshal(dat, &LocationAreas)
+		err := json.Unmarshal(cachedValues, &LocationAreas)
 		if err != nil {
-			return LocationAreas, fmt.Errorf("error during unmarshal of body (JSON): %v", err)
+			return LocationAreasResp{}, fmt.Errorf("error during unmarshal of body (JSON): %v", err)
 		}
 		return LocationAreas, nil
 	}
