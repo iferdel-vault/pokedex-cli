@@ -1,11 +1,8 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"log"
-
-	"github.com/iferdel/pokedexcli/internal/pokeapi"
 )
 
 func commandMapf(cfg *config) error {
@@ -17,7 +14,6 @@ func commandMapf(cfg *config) error {
 			return
 		}
 	*/
-
 	resp, err := cfg.pokeapiClient.GetLocationAreas(cfg.nextLocationAreaURL)
 	if err != nil {
 		log.Fatal(err)
@@ -40,12 +36,9 @@ func commandMapf(cfg *config) error {
 
 func commandMapb(cfg *config) error {
 
-	if cfg.locationAreas.Previous == nil {
-		fmt.Println("you are in the first page")
-		return errors.New("currently on first page")
+	if cfg.prevLocationAreaURL == nil {
+		return fmt.Errorf("you are currently in the first page")
 	}
-
-	cfg.currentEndPoint = cfg.locationAreas.Previous
 
 	/*
 		if cachedData, ok := cache.Get(*c.currentEndPoint); ok {
@@ -55,8 +48,14 @@ func commandMapb(cfg *config) error {
 		}
 	*/
 
-	pokeapi.GetAPI(&cfg.locationAreas)
-	// locationValues, _ := cfg.locationAreas.ParseLocationNames()
+	resp, err := cfg.pokeapiClient.GetLocationAreas(cfg.prevLocationAreaURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = resp.ParseLocationNames()
+
+	cfg.nextLocationAreaURL = resp.Next
+	cfg.prevLocationAreaURL = resp.Previous
 	//cache.Add(*c.currentEndPoint, []byte(locationValues))
 
 	return nil

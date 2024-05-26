@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
 	// "time"
 
 	"github.com/iferdel/pokedexcli/internal/pokeapi"
@@ -38,12 +39,15 @@ func CLI(cfg *config) {
 			continue
 		}
 
-		command, ok := getCommands(cfg)[cleanedInput[0]]
+		command, ok := getCommands()[cleanedInput[0]]
 		if !ok {
 			fmt.Printf("Command not available, see 'help'\n")
 			continue
 		}
-		command.callback(cfg)
+		err := command.callback(cfg)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
 
@@ -61,7 +65,7 @@ type CliCommand struct {
 	callback    func(*config) error
 }
 
-func getCommands(cfg *config) CliCommands {
+func getCommands() CliCommands {
 	return CliCommands{
 		"help": {
 			name:        "help",
