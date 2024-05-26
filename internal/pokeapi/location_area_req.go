@@ -58,3 +58,57 @@ func (c *Client) GetLocationAreas(pageURL *string) (LocationAreasResp, error) {
 
 	return LocationAreas, nil
 }
+
+func (c *Client) GetLocationArea(locationArea *string) (LocationAreaResp, error) {
+	if locationArea == nil {
+		return LocationAreaResp{}, fmt.Errorf("======")
+	}
+
+	endpoint := "location-area/" + *locationArea
+	fullURL := baseURL + endpoint
+
+	cachedValues, ok := c.cache.Get(fullURL)
+	if ok {
+		// cache hit
+		fmt.Println("====cache hit=====")
+		pokemonsInLocationArea := LocationAreaResp{}
+		err := json.Unmarshal(cachedValues, &pokemonsInLocationArea)
+		if err != nil {
+			return pokemonsInLocationArea, fmt.Errorf("error during unmarshal of body (JSON): %v", err)
+		}
+
+		return pokemonsInLocationArea, nil
+
+	}
+
+	req, err := http.NewRequest("GET", fullURL, nil)
+
+	if err != nil {
+		return LocationAreaResp{}, fmt.Errorf("error making get request: %v", err)
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return LocationAreaResp{}, fmt.Errorf("error during 'Do' of request: %v", err)
+	}
+	if resp.StatusCode > 399 {
+		return LocationAreaResp{}, fmt.Errorf("status code over 399: %v", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	if err != nil {
+		return LocationAreaResp{}, fmt.Errorf("error during reading of response body: %v", err)
+	}
+
+	pokemonsInLocationArea := LocationAreaResp{}
+	err = json.Unmarshal(body, &pokemonsInLocationArea)
+	if err != nil {
+		return pokemonsInLocationArea, fmt.Errorf("error during unmarshal of body (JSON): %v", err)
+	}
+
+	c.cache.Add(fullURL, body)
+
+	return pokemonsInLocationArea, nil
+
+}

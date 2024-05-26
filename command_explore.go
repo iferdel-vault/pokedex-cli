@@ -6,7 +6,7 @@ import (
 
 func commandExplore(cfg *config, locationArea *string) error {
 
-	resp, err := cfg.pokeapiClient.GetPokemonsInLocationArea(locationArea)
+	resp, err := cfg.pokeapiClient.GetLocationArea(locationArea)
 	if err != nil {
 		return err
 	}
