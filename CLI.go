@@ -20,9 +20,6 @@ import (
 func CLI(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 
-	endPoint := pokeapi.InitialLocationAreaEndpoint
-
-	cfg.currentEndPoint = &endPoint
 	cfg.locationAreas = &pokeapi.LocationAreasResp{}
 
 	// cache initialization

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 	"log"
 )
 
@@ -37,7 +37,7 @@ func commandMapf(cfg *config) error {
 func commandMapb(cfg *config) error {
 
 	if cfg.prevLocationAreaURL == nil {
-		return fmt.Errorf("you are currently in the first page")
+		return errors.New("you are currently in the first page")
 	}
 
 	/*
