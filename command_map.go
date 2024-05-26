@@ -18,11 +18,14 @@ func commandMapf(cfg *config) error {
 		}
 	*/
 
-	resp, err := cfg.pokeapiClient.GetLocationAreas()
+	resp, err := cfg.pokeapiClient.GetLocationAreas(cfg.nextLocationAreaURL)
 	if err != nil {
 		log.Fatal(err)
 	}
 	_, err = resp.ParseLocationNames()
+
+	cfg.nextLocationAreaURL = resp.Next
+	cfg.prevLocationAreaURL = resp.Previous
 
 	return nil
 
