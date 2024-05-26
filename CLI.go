@@ -18,6 +18,7 @@ type config struct {
 	currentEndPoint *string
 	locationAreas   *pokeapi.LocationAreasResp
 }
+
 func CLI() {
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -80,7 +81,7 @@ func getCommands(c *config, cache *pokecache.Cache) CliCommands {
 		"map": {
 			name:        "map",
 			description: "displays the next 20 location areas in Pokemon world",
-			callback:    func() error { commandMap(c, cache); return nil },
+			callback:    func() error { commandMapf(c, cache); return nil },
 		},
 		"mapb": {
 			name:        "mapb",
