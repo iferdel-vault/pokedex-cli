@@ -1,5 +1,6 @@
+// internal/pokeapi/pokeapi.go
 package pokeapi
 
 const (
-	initialLocationAreaEndpoint = "https://pokeapi.co/api/v2/location-area/"
+	InitialLocationAreaEndpoint = "https://pokeapi.co/api/v2/location-area/"
 )

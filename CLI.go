@@ -1,3 +1,4 @@
+// CLI.go
 package main
 
 import (
@@ -11,9 +12,48 @@ import (
 	"github.com/iferdel/pokedexcli/internal/pokecache"
 )
 
+// el config del CLI debe tener información del client que se utilizará
 type config struct {
+
 	currentEndPoint *string
 	locationAreas   *pokeapi.LocationAreasResp
+}
+func CLI() {
+	scanner := bufio.NewScanner(os.Stdin)
+
+    endPoint := pokeapi.InitialLocationAreaEndpoint
+
+	config := &config{
+		currentEndPoint: &endPoint,
+		locationAreas:   &pokeapi.LocationAreasResp{},
+	}
+
+	// cache initialization
+	cache := pokecache.NewCache(10 * time.Second)
+
+	for {
+		fmt.Printf("pokedex >")
+		scanner.Scan()
+		text := scanner.Text()
+
+		cleanedInput := cleanInput(text)
+		if len(cleanedInput) == 0 {
+			fmt.Printf("")
+			continue
+		}
+
+		command, ok := getCommands(config, cache)[cleanedInput[0]]
+		if !ok {
+			fmt.Printf("Command not available, see 'help'\n")
+			continue
+		}
+		command.callback()
+	}
+}
+
+func cleanInput(input string) []string {
+	words := strings.Fields(input)
+	return words
 }
 
 type CliCommands map[string]CliCommand
@@ -50,39 +90,3 @@ func getCommands(c *config, cache *pokecache.Cache) CliCommands {
 	}
 }
 
-func cleanInput(input string) []string {
-	words := strings.Fields(input)
-	return words
-}
-
-func CLI() {
-	scanner := bufio.NewScanner(os.Stdin)
-
-	var initialLocationAreaEndpoint string = "https://pokeapi.co/api/v2/location-area/"
-	config := &config{
-		currentEndPoint: &initialLocationAreaEndpoint,
-		locationAreas:   &pokeapi.LocationAreasResp{},
-	}
-
-	// cache initialization
-	cache := pokecache.NewCache(10 * time.Second)
-
-	for {
-		fmt.Printf("pokedex >")
-		scanner.Scan()
-		text := scanner.Text()
-
-		cleanedInput := cleanInput(text)
-		if len(cleanedInput) == 0 {
-			fmt.Printf("")
-			continue
-		}
-
-		command, ok := getCommands(config, cache)[cleanedInput[0]]
-		if !ok {
-			fmt.Printf("Command not available, see 'help'\n")
-			continue
-		}
-		command.callback()
-	}
-}
