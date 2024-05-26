@@ -6,12 +6,12 @@ import (
 
 func commandMapf(cfg *config) error {
 	/*
-		// check if data in cache already
-		if cachedData, ok := cache.Get(*c.currentEndPoint); ok {
-			cache.Get(*c.currentEndPoint)
-			fmt.Println(string(cachedData))
-			return
-		}
+	   // check if data in cache already
+	   if cachedData, ok := cache.Get(*c.currentEndPoint); ok {
+	       cache.Get(*c.currentEndPoint)
+	       fmt.Println(string(cachedData))
+	       return nil
+	   }
 	*/
 	resp, err := cfg.pokeapiClient.GetLocationAreas(cfg.nextLocationAreaURL)
 	if err != nil {
@@ -24,13 +24,8 @@ func commandMapf(cfg *config) error {
 
 	return nil
 
-	/*
-	   pokeapi.GetAPI(&c.locationAreas)
-	   locationValues := c.locationAreas.GetLocationNames()
-	   cache.Add(*c.currentEndPoint, []byte(locationValues))
+	//    cache.Add(*c.currentEndPoint, []byte(locationValues))
 
-	   c.currentEndPoint = c.locationAreas.Next
-	*/
 }
 
 func commandMapb(cfg *config) error {

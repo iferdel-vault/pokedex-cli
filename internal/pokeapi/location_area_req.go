@@ -8,11 +8,24 @@ import (
 )
 
 func (c *Client) GetLocationAreas(pageURL *string) (LocationAreasResp, error) {
-	endpoint := "location-area/"
+	endpoint := "location-area?offset=0&limit=20/"
 	fullURL := baseURL + endpoint
 
 	if pageURL != nil {
 		fullURL = *pageURL
+	}
+
+	// cache checking
+	dat, ok := c.cache.Get(fullURL)
+	if ok {
+		// cache hit
+		fmt.Println("cache hit")
+		LocationAreas := LocationAreasResp{}
+		err := json.Unmarshal(dat, &LocationAreas)
+		if err != nil {
+			return LocationAreas, fmt.Errorf("error during unmarshal of body (JSON): %v", err)
+		}
+		return LocationAreas, nil
 	}
 
 	req, err := http.NewRequest("GET", fullURL, nil)
@@ -39,6 +52,8 @@ func (c *Client) GetLocationAreas(pageURL *string) (LocationAreasResp, error) {
 	if err != nil {
 		return LocationAreas, fmt.Errorf("error during unmarshal of body (JSON): %v", err)
 	}
+
+	c.cache.Add(fullURL, body)
 
 	return LocationAreas, nil
 }

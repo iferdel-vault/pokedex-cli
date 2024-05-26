@@ -1,7 +1,11 @@
 // main.go
 package main
 
-import "github.com/iferdel/pokedexcli/internal/pokeapi"
+import (
+	"time"
+
+	"github.com/iferdel/pokedexcli/internal/pokeapi"
+)
 
 // statefull information for command callback functions
 type config struct {
@@ -14,7 +18,7 @@ type config struct {
 
 func main() {
 	cfg := config{
-		pokeapiClient:       pokeapi.NewClient(), // rather than creating a new client for every new callback command
+		pokeapiClient:       pokeapi.NewClient(time.Hour), // rather than creating a new client for every new callback command
 		nextLocationAreaURL: nil,
 		prevLocationAreaURL: nil,
 	}
