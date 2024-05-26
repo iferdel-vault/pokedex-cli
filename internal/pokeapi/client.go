@@ -21,7 +21,6 @@ func NewClient() Client {
 	}
 }
 
-
 // Primer error a la vista, la función alude a un GET, pero no existe ningún return de esta función
 // cuando por lo general un GET request tiene un return (los datos obtenidos del request)
 func GetAPI(jsonStructure interface{}) {

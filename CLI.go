@@ -6,32 +6,26 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"time"
+	// "time"
 
 	"github.com/iferdel/pokedexcli/internal/pokeapi"
-	"github.com/iferdel/pokedexcli/internal/pokecache"
+	// "github.com/iferdel/pokedexcli/internal/pokecache"
 )
 
 // el config del CLI debe tener información del client que se utilizará
 // config con currentEndpoint puede ser, pero no es según pauta. Revisar
 // config con locationAreas no corresponde, porque es un coupling muy grande.
-type config struct {
-	currentEndPoint *string
-	locationAreas   *pokeapi.LocationAreasResp
-}
-
-func CLI() {
+// config as a pointer in the paramater porque queremos shared access to its values
+func CLI(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	endPoint := pokeapi.InitialLocationAreaEndpoint
 
-	config := &config{
-		currentEndPoint: &endPoint,
-		locationAreas:   &pokeapi.LocationAreasResp{},
-	}
+	cfg.currentEndPoint = &endPoint
+	cfg.locationAreas = &pokeapi.LocationAreasResp{}
 
 	// cache initialization
-	cache := pokecache.NewCache(10 * time.Second)
+	// cache := pokecache.NewCache(10 * time.Second)
 
 	for {
 		fmt.Printf("pokedex >")
@@ -44,12 +38,12 @@ func CLI() {
 			continue
 		}
 
-		command, ok := getCommands(config, cache)[cleanedInput[0]]
+		command, ok := getCommands(cfg)[cleanedInput[0]]
 		if !ok {
 			fmt.Printf("Command not available, see 'help'\n")
 			continue
 		}
-		command.callback()
+		command.callback(cfg)
 	}
 }
 
@@ -64,10 +58,10 @@ type CliCommands map[string]CliCommand
 type CliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*config) error
 }
 
-func getCommands(c *config, cache *pokecache.Cache) CliCommands {
+func getCommands(cfg *config) CliCommands {
 	return CliCommands{
 		"help": {
 			name:        "help",
@@ -82,12 +76,12 @@ func getCommands(c *config, cache *pokecache.Cache) CliCommands {
 		"map": {
 			name:        "map",
 			description: "displays the next 20 location areas in Pokemon world",
-			callback:    func() error { commandMapf(c, cache); return nil },
+			callback:    commandMapf,
 		},
 		"mapb": {
 			name:        "mapb",
 			description: "displays the previous 20 location areas in Pokemon world",
-			callback:    func() error { commandMapb(c, cache); return nil },
+			callback:    commandMapb,
 		},
 	}
 }
