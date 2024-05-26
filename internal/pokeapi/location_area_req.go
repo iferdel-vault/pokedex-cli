@@ -59,12 +59,8 @@ func (c *Client) GetLocationAreas(pageURL *string) (LocationAreasResp, error) {
 	return LocationAreas, nil
 }
 
-func (c *Client) GetLocationArea(locationAreaName*string) (LocationAreaResp, error) {
-	if locationAreaName == nil {
-		return LocationAreaResp{}, fmt.Errorf("======")
-	}
-
-	endpoint := "location-area/" + *locationAreaName
+func (c *Client) GetLocationArea(locationAreaName string) (LocationAreaResp, error) {
+	endpoint := "location-area/" + locationAreaName
 	fullURL := baseURL + endpoint
 
 	cachedValues, ok := c.cache.Get(fullURL)
