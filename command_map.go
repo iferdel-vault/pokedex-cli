@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 )
 
 func commandMapf(cfg *config) error {
@@ -10,10 +11,13 @@ func commandMapf(cfg *config) error {
 	if err != nil {
 		return err
 	}
-	_, err = resp.ParseLocationNames()
 
 	cfg.nextLocationAreaURL = resp.Next
 	cfg.prevLocationAreaURL = resp.Previous
+
+	for _, area := range resp.Results {
+		fmt.Printf("- %v\n", area.Name)
+	}
 
 	return nil
 }
@@ -28,10 +32,13 @@ func commandMapb(cfg *config) error {
 	if err != nil {
 		return err
 	}
-	_, err = resp.ParseLocationNames()
 
 	cfg.nextLocationAreaURL = resp.Next
 	cfg.prevLocationAreaURL = resp.Previous
+
+	for _, area := range resp.Results {
+		fmt.Printf("- %v\n", area.Name)
+	}
 
 	return nil
 }

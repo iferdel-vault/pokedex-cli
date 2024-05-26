@@ -10,8 +10,6 @@ import (
 // statefull information for command callback functions
 type config struct {
 	pokeapiClient       pokeapi.Client //to reuse the http client (more eff than constant creation)
-	currentEndPoint     *string
-	locationAreas       *pokeapi.LocationAreasResp
 	nextLocationAreaURL *string
 	prevLocationAreaURL *string
 }

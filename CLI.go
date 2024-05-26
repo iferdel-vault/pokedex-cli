@@ -6,11 +6,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	// "time"
-
-	"github.com/iferdel/pokedexcli/internal/pokeapi"
-	// "github.com/iferdel/pokedexcli/internal/pokecache"
 )
 
 // el config del CLI debe tener información del client que se utilizará
@@ -19,11 +14,6 @@ import (
 // config as a pointer in the paramater porque queremos shared access to its values
 func CLI(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
-
-	cfg.locationAreas = &pokeapi.LocationAreasResp{}
-
-	// cache initialization
-	// cache := pokecache.NewCache(10 * time.Second)
 
 	for {
 		fmt.Printf("pokedex >")

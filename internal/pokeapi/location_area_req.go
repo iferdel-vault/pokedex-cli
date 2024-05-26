@@ -19,6 +19,7 @@ func (c *Client) GetLocationAreas(pageURL *string) (LocationAreasResp, error) {
 	dat, ok := c.cache.Get(fullURL)
 	if ok {
 		// cache hit
+		fmt.Println("====cache hit=====")
 		LocationAreas := LocationAreasResp{}
 		err := json.Unmarshal(dat, &LocationAreas)
 		if err != nil {
@@ -55,15 +56,4 @@ func (c *Client) GetLocationAreas(pageURL *string) (LocationAreasResp, error) {
 	c.cache.Add(fullURL, body)
 
 	return LocationAreas, nil
-}
-
-func (l LocationAreasResp) ParseLocationNames() ([]byte, error) {
-	fmt.Println("Location areas:")
-	locationNames := ""
-	for _, area := range l.Results {
-		fmt.Printf("- %v\n", area.Name)
-		locationNames += area.Name + "\n"
-	}
-	locationNames = locationNames[:len(locationNames)-1]
-	return []byte(locationNames), nil
 }
