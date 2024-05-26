@@ -6,7 +6,20 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 )
+
+type Client struct {
+    httpClient http.Client
+}
+
+func NewClient() Client {
+    return Client{
+        httpClient: http.Client{
+            Timeout: time.Minute,
+        },
+    }    
+}
 
 func GetAPI(endpoint string, jsonStructure interface{}) {
 	res, err := http.Get(endpoint)
