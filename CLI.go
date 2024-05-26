@@ -13,6 +13,8 @@ import (
 )
 
 // el config del CLI debe tener información del client que se utilizará
+// config con currentEndpoint puede ser, pero no es según pauta. Revisar
+// config con locationAreas no corresponde, porque es un coupling muy grande.
 type config struct {
 	currentEndPoint *string
 	locationAreas   *pokeapi.LocationAreasResp

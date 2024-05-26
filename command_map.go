@@ -9,12 +9,14 @@ import (
 )
 
 func commandMapf(c *config, cache *pokecache.Cache) {
-	// check if data in cache already
-	if cachedData, ok := cache.Get(*c.currentEndPoint); ok {
-		cache.Get(*c.currentEndPoint)
-		fmt.Println(string(cachedData))
-		return
-	}
+	/*
+		// check if data in cache already
+		if cachedData, ok := cache.Get(*c.currentEndPoint); ok {
+			cache.Get(*c.currentEndPoint)
+			fmt.Println(string(cachedData))
+			return
+		}
+	*/
 	pokeapi.GetAPI(*c.currentEndPoint, &c.locationAreas)
 	locationValues := c.locationAreas.GetLocationNames()
 	cache.Add(*c.currentEndPoint, []byte(locationValues))
@@ -31,11 +33,13 @@ func commandMapb(c *config, cache *pokecache.Cache) error {
 
 	c.currentEndPoint = c.locationAreas.Previous
 
-	if cachedData, ok := cache.Get(*c.currentEndPoint); ok {
-		cache.Get(*c.currentEndPoint)
-		fmt.Println(string(cachedData))
-		return nil
-	}
+	/*
+		if cachedData, ok := cache.Get(*c.currentEndPoint); ok {
+			cache.Get(*c.currentEndPoint)
+			fmt.Println(string(cachedData))
+			return nil
+		}
+	*/
 
 	pokeapi.GetAPI(*c.currentEndPoint, &c.locationAreas)
 	locationValues := c.locationAreas.GetLocationNames()
