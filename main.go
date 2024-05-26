@@ -15,10 +15,10 @@ type config struct {
 }
 
 func main() {
-	cfg := config{
+	cfg := &config{
 		pokeapiClient:       pokeapi.NewClient(time.Minute, time.Hour), // rather than creating a new client for every new callback command
 		nextLocationAreaURL: nil,
 		prevLocationAreaURL: nil,
 	}
-	CLI(&cfg)
+	CLI(cfg)
 }

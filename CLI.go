@@ -8,13 +8,9 @@ import (
 	"strings"
 )
 
-// el config del CLI debe tener información del client que se utilizará
-// config con currentEndpoint puede ser, pero no es según pauta. Revisar
-// config con locationAreas no corresponde, porque es un coupling muy grande.
 // config as a pointer in the paramater porque queremos shared access to its values
 func CLI(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
-
 	for {
 		fmt.Printf("pokedex >")
 		scanner.Scan()
@@ -22,11 +18,11 @@ func CLI(cfg *config) {
 
 		cleanedInput := cleanInput(text)
 		if len(cleanedInput) == 0 {
-			fmt.Printf("")
 			continue
 		}
 
-		command, ok := getCommands()[cleanedInput[0]]
+		commandName := cleanedInput[0]
+		command, ok := getCommands()[commandName]
 		if !ok {
 			fmt.Printf("Command not available, see 'help'\n")
 			continue
@@ -34,6 +30,7 @@ func CLI(cfg *config) {
 		err := command.callback(cfg)
 		if err != nil {
 			fmt.Println(err)
+			continue
 		}
 	}
 }
@@ -43,17 +40,15 @@ func cleanInput(input string) []string {
 	return words
 }
 
-type CliCommands map[string]CliCommand
-
-// CliCommand is used to construct the CliCommands
-type CliCommand struct {
+// cliCommand is used to construct the CliCommands
+type cliCommand struct {
 	name        string
 	description string
 	callback    func(*config) error
 }
 
-func getCommands() CliCommands {
-	return CliCommands{
+func getCommands() map[string]cliCommand {
+	return map[string]cliCommand{
 		"help": {
 			name:        "help",
 			description: "this is the help of the pokedex",
