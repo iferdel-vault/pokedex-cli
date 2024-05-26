@@ -16,7 +16,7 @@ type config struct {
 
 func main() {
 	cfg := config{
-		pokeapiClient:       pokeapi.NewClient(time.Hour), // rather than creating a new client for every new callback command
+		pokeapiClient:       pokeapi.NewClient(time.Minute, time.Hour), // rather than creating a new client for every new callback command
 		nextLocationAreaURL: nil,
 		prevLocationAreaURL: nil,
 	}
