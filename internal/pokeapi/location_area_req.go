@@ -8,6 +8,7 @@ import (
 )
 
 func (c *Client) GetLocationAreas(pageURL *string) (LocationAreasResp, error) {
+
 	endpoint := "location-area?offset=0&limit=20/"
 	fullURL := baseURL + endpoint
 

@@ -24,10 +24,18 @@ func CLI(cfg *config) {
 		commandName := cleanedInput[0]
 		command, ok := getCommands()[commandName]
 		if !ok {
-			fmt.Printf("Command not available, see 'help'\n")
+			fmt.Println("Command not available, see 'help'")
 			continue
 		}
-		err := command.callback(cfg)
+		if len(cleanedInput) > 1 {
+			parameter := cleanedInput[1]
+			err := command.callback(cfg, &parameter)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+		}
+		err := command.callback(cfg, nil)
 		if err != nil {
 			fmt.Println(err)
 			continue
@@ -44,7 +52,7 @@ func cleanInput(input string) []string {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, *string) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -68,6 +76,11 @@ func getCommands() map[string]cliCommand {
 			name:        "mapb",
 			description: "displays the previous 20 location areas in Pokemon world",
 			callback:    commandMapb,
+		},
+		"explore": {
+			name:        "explore",
+			description: "displays the previous 20 location areas in Pokemon world",
+			callback:    commandExplore,
 		},
 	}
 }
