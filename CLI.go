@@ -14,7 +14,6 @@ import (
 
 // el config del CLI debe tener información del client que se utilizará
 type config struct {
-
 	currentEndPoint *string
 	locationAreas   *pokeapi.LocationAreasResp
 }
@@ -22,7 +21,7 @@ type config struct {
 func CLI() {
 	scanner := bufio.NewScanner(os.Stdin)
 
-    endPoint := pokeapi.InitialLocationAreaEndpoint
+	endPoint := pokeapi.InitialLocationAreaEndpoint
 
 	config := &config{
 		currentEndPoint: &endPoint,
@@ -90,4 +89,3 @@ func getCommands(c *config, cache *pokecache.Cache) CliCommands {
 		},
 	}
 }
-

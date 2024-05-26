@@ -1,8 +1,8 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-    "errors"
 
 	"github.com/iferdel/pokedexcli/internal/pokeapi"
 	"github.com/iferdel/pokedexcli/internal/pokecache"
