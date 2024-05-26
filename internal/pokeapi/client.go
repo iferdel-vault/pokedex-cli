@@ -10,18 +10,22 @@ import (
 )
 
 type Client struct {
-    httpClient http.Client
+	httpClient http.Client
 }
 
 func NewClient() Client {
-    return Client{
-        httpClient: http.Client{
-            Timeout: time.Minute,
-        },
-    }    
+	return Client{
+		httpClient: http.Client{
+			Timeout: time.Minute,
+		},
+	}
 }
 
-func GetAPI(endpoint string, jsonStructure interface{}) {
+
+// Primer error a la vista, la función alude a un GET, pero no existe ningún return de esta función
+// cuando por lo general un GET request tiene un return (los datos obtenidos del request)
+func GetAPI(jsonStructure interface{}) {
+	endpoint := InitialLocationAreaEndpoint
 	res, err := http.Get(endpoint)
 	if err != nil {
 		fmt.Println("Error encountered during the http.Get method")

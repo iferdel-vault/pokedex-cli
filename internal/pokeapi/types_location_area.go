@@ -1,5 +1,6 @@
 package pokeapi
 
+// in its own file because its so specific to the domain we want to cover
 type LocationAreasResp struct {
 	Count    int     `json:"count"`
 	Next     *string `json:"next"`     // Next is nil in last page

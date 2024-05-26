@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+    "log"
 
 	"github.com/iferdel/pokedexcli/internal/pokeapi"
 	"github.com/iferdel/pokedexcli/internal/pokecache"
@@ -17,11 +18,22 @@ func commandMapf(c *config, cache *pokecache.Cache) {
 			return
 		}
 	*/
-	pokeapi.GetAPI(*c.currentEndPoint, &c.locationAreas)
-	locationValues := c.locationAreas.GetLocationNames()
-	cache.Add(*c.currentEndPoint, []byte(locationValues))
 
-	c.currentEndPoint = c.locationAreas.Next
+    pokeapiClient := pokeapi.NewClient()
+    resp, err := pokeapiClient.GetLocationAreas()
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(resp)
+
+
+    /*
+    pokeapi.GetAPI(&c.locationAreas)
+    locationValues := c.locationAreas.GetLocationNames()
+    cache.Add(*c.currentEndPoint, []byte(locationValues))
+
+    c.currentEndPoint = c.locationAreas.Next
+*/
 }
 
 func commandMapb(c *config, cache *pokecache.Cache) error {
@@ -41,7 +53,7 @@ func commandMapb(c *config, cache *pokecache.Cache) error {
 		}
 	*/
 
-	pokeapi.GetAPI(*c.currentEndPoint, &c.locationAreas)
+	pokeapi.GetAPI(&c.locationAreas)
 	locationValues := c.locationAreas.GetLocationNames()
 	cache.Add(*c.currentEndPoint, []byte(locationValues))
 
