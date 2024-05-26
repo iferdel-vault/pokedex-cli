@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"log"
 )
 
 func commandMapf(cfg *config) error {
@@ -16,7 +15,7 @@ func commandMapf(cfg *config) error {
 	*/
 	resp, err := cfg.pokeapiClient.GetLocationAreas(cfg.nextLocationAreaURL)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	_, err = resp.ParseLocationNames()
 
@@ -50,7 +49,7 @@ func commandMapb(cfg *config) error {
 
 	resp, err := cfg.pokeapiClient.GetLocationAreas(cfg.prevLocationAreaURL)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	_, err = resp.ParseLocationNames()
 
