@@ -1,34 +1,22 @@
 package pokeapi
 
 import (
-	"encoding/json"
-	"fmt"
-	"io"
-	"log"
 	"net/http"
+	"time"
+
+	"github.com/iferdel/pokedexcli/internal/pokecache"
 )
 
-func GetAPI(endpoint string, jsonStructure interface{}) {
-	res, err := http.Get(endpoint)
-	if err != nil {
-		fmt.Println("Error encountered during the http.Get method")
-		log.Fatal(err)
-	}
+type Client struct {
+	cache      pokecache.Cache
+	httpClient http.Client
+}
 
-	defer res.Body.Close()
-	body, err := io.ReadAll(res.Body)
-
-	if res.StatusCode != 200 {
-		fmt.Errorf("response comes with status code %q, expected 200", res.StatusCode)
+func NewClient(cacheInterval time.Duration) Client {
+	return Client{
+		cache: pokecache.NewCache(cacheInterval),
+		httpClient: http.Client{
+			Timeout: time.Minute,
+		},
 	}
-	if err != nil {
-		fmt.Println("Error encountered during the read of the body from the response")
-		log.Fatal(err)
-	}
-
-	err = json.Unmarshal(body, jsonStructure)
-	if err != nil {
-		fmt.Println(err)
-	}
-
 }

@@ -14,10 +14,8 @@ type cacheEntry struct {
 	val       []byte
 }
 
-// el pointer está de más parece
-// /////////////
-func NewCache(interval time.Duration) *Cache {
-	c := &Cache{
+func NewCache(interval time.Duration) Cache {
+	c := Cache{
 		cache: make(map[string]cacheEntry),
 	}
 	go c.reapLoop(interval)
