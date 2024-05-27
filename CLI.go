@@ -2,12 +2,15 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/peterh/liner"
 )
+
+var errExit = errors.New("exit requested")
 
 // config as a pointer in the paramater porque queremos shared access to its values
 func CLI(cfg *config) {
@@ -23,10 +26,13 @@ func CLI(cfg *config) {
 	}
 
 	// Save history to file on exit
-	if f, err := os.Create(historyFile); err == nil {
-		cfg.CLILiner.WriteHistory(f)
-		f.Close()
-	}
+	defer func() {
+		if f, err := os.Create(historyFile); err == nil {
+			cfg.CLILiner.WriteHistory(f)
+			f.Close()
+		}
+		cfg.CLILiner.Close()
+	}()
 
 	cfg.CLILiner.SetCtrlCAborts(true)
 
@@ -35,7 +41,6 @@ func CLI(cfg *config) {
 		text, err := cfg.CLILiner.Prompt("pokedex > ")
 		if err != nil {
 			if err == liner.ErrPromptAborted {
-				cfg.CLILiner.Close()
 				break
 			}
 			fmt.Println("Error reading line:", err)
@@ -62,6 +67,9 @@ func CLI(cfg *config) {
 		}
 		err = command.callback(cfg, args...)
 		if err != nil {
+			if err == errExit {
+				break
+			}
 			fmt.Println(err)
 			continue
 		}
