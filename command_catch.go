@@ -3,8 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
-
-	"github.com/iferdel/pokedexcli/internal/pokeapi"
+	"math/rand"
+	"time"
 )
 
 func commandCatch(cfg *config, args ...string) error {
@@ -19,10 +19,20 @@ func commandCatch(cfg *config, args ...string) error {
 		return err
 	}
 
-	pokedex := pokeapi.Pokedex{}
-	pokedex[resp.Name] = resp
+	fmt.Printf("Throwing a Pokeball at %s...\n", resp.Name)
+	fmt.Printf("%s has %d base experience\n",
+		resp.Name,
+		resp.BaseExperience,
+	)
+	time.Sleep(1 * time.Second)
 
-	fmt.Println("printing pokedex to date:", pokedex)
-
-	return nil
+	const threshold = 50
+	catchChance := rand.Intn(resp.BaseExperience)
+	if catchChance > threshold {
+		pokedex := cfg.Pokedex
+		pokedex[resp.Name] = resp
+		return fmt.Errorf("%s was caught!", resp.Name)
+	} else {
+		return fmt.Errorf("%s escaped!", resp.Name)
+	}
 }

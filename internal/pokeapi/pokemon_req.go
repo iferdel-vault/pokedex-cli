@@ -11,6 +11,19 @@ func (c *Client) GetPokemonInfo(pokemon *string) (Pokemon, error) {
 	endpoint := fmt.Sprintf("pokemon/%s", *pokemon)
 	fullURL := baseURL + endpoint
 
+	// cache checking
+	cachedValues, ok := c.cache.Get(fullURL)
+	if ok {
+		// cache hit
+		fmt.Println("====cache hit=====")
+		pokemon := Pokemon{}
+		err := json.Unmarshal(cachedValues, &pokemon)
+		if err != nil {
+			return Pokemon{}, fmt.Errorf("error during unmarshal of body (JSON): %v", err)
+		}
+		return pokemon, nil
+	}
+
 	req, err := http.NewRequest("GET", fullURL, nil)
 	if err != nil {
 		return Pokemon{}, fmt.Errorf("error making get request: %v", err)
@@ -35,6 +48,8 @@ func (c *Client) GetPokemonInfo(pokemon *string) (Pokemon, error) {
 	if err != nil {
 		return PokemonInfo, fmt.Errorf("error during unmarshal of body (JSON): %v", err)
 	}
+
+	c.cache.Add(fullURL, body)
 
 	return PokemonInfo, nil
 }
