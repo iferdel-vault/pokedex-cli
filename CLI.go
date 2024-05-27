@@ -83,5 +83,10 @@ func getCommands() map[string]cliCommand {
 			description: "catches a pokemon with a success rate based on pokemon base experience",
 			callback:    commandCatch,
 		},
+		"inspect": {
+			name:        "inspect {pokemon}",
+			description: "inspect pokemon information if in Pokedex",
+			callback:    commandInspect,
+		},
 	}
 }
