@@ -21,3 +21,6 @@ pokedexcli
 
 # Go workspace file
 go.work
+
+# History data for project in runtime
+.pokedex_history

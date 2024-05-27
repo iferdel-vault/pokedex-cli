@@ -2,19 +2,48 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/peterh/liner"
 )
 
 // config as a pointer in the paramater porque queremos shared access to its values
 func CLI(cfg *config) {
-	scanner := bufio.NewScanner(os.Stdin)
+
+	// Create a new liner instance
+	cfg.CLILiner = liner.NewLiner()
+
+	// Load history file if exists
+	historyFile := ".pokedex_history"
+	if f, err := os.Open(historyFile); err == nil {
+		cfg.CLILiner.ReadHistory(f)
+		f.Close()
+	}
+
+	// Save history to file on exit
+	if f, err := os.Create(historyFile); err == nil {
+		cfg.CLILiner.WriteHistory(f)
+		f.Close()
+	}
+
+	cfg.CLILiner.SetCtrlCAborts(true)
+
 	for {
-		fmt.Printf("pokedex >")
-		scanner.Scan()
-		text := scanner.Text()
+		// Prompt for input with history support
+		text, err := cfg.CLILiner.Prompt("pokedex > ")
+		if err != nil {
+			if err == liner.ErrPromptAborted {
+				cfg.CLILiner.Close()
+				break
+			}
+			fmt.Println("Error reading line:", err)
+			continue
+		}
+
+		// Add the command to history
+		cfg.CLILiner.AppendHistory(text)
 
 		cleanedInput := cleanInput(text)
 		if len(cleanedInput) == 0 {
@@ -31,7 +60,7 @@ func CLI(cfg *config) {
 		if len(cleanedInput) > 1 {
 			args = cleanedInput[1:]
 		}
-		err := command.callback(cfg, args...)
+		err = command.callback(cfg, args...)
 		if err != nil {
 			fmt.Println(err)
 			continue

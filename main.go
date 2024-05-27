@@ -5,10 +5,12 @@ import (
 	"time"
 
 	"github.com/iferdel/pokedexcli/internal/pokeapi"
+	"github.com/peterh/liner"
 )
 
 // statefull information for command callback functions
 type config struct {
+	CLILiner            *liner.State
 	pokeapiClient       pokeapi.Client //to reuse the http client (more eff than constant creation)
 	nextLocationAreaURL *string
 	prevLocationAreaURL *string
