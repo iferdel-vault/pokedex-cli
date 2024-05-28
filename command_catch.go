@@ -35,6 +35,6 @@ func commandCatch(cfg *config, args ...string) error {
 		fmt.Println("You may now inspect it with inspect command")
 		return nil
 	} else {
-		return fmt.Errorf("%s escaped!", resp.Name)
+		return fmt.Errorf("%s escaped! ", resp.Name)
 	}
 }

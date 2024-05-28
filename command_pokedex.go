@@ -9,9 +9,12 @@ import (
 func loadPokedex(cfg *config, filename string) error {
 	dat, err := os.ReadFile(filename)
 	if err != nil {
-		return fmt.Errorf("error reading file")
+		return err
 	}
 	err = json.Unmarshal(dat, &cfg.Pokedex)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
