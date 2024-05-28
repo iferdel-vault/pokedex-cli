@@ -23,4 +23,5 @@ pokedexcli
 go.work
 
 # History data for project in runtime
+.cmd_history
 .pokedex_history
